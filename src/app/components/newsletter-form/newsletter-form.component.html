@@ -11,11 +11,16 @@
       est laborum
     </p>
   </div>
-  <form>
+  <form [formGroup]="newsletterForm">
     <label for="name">Name</label>
-    <input id="name" />
+    <input id="name" formControlName="name" />
     <label for="email">Email</label>
-    <input id="email" />
-    <btn-primary btn-text="Se inscreva" variant="secondary"></btn-primary>
+    <input id="email" formControlName="email" />
+    <btn-primary
+      btn-text="Se inscreva"
+      variant="secondary"
+      (submit)="onSubmit()"
+      [disabled]="!newsletterForm.valid"
+    ></btn-primary>
   </form>
 </section>
