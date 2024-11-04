@@ -21,6 +21,7 @@
       variant="secondary"
       (submit)="onSubmit()"
       [disabled]="!newsletterForm.valid"
+      [loading]="loading()"
     ></btn-primary>
   </form>
 </section>

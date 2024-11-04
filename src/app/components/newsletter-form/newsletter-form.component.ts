@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { BtnPrimaryComponent } from '../btn-primary/btn-primary.component';
 import {
   FormControl,
@@ -7,6 +7,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { NewsletterService } from '../../services/newsletter.service';
+import { HttpClientModule } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'newsletter-form',
@@ -20,6 +22,8 @@ import { NewsletterService } from '../../services/newsletter.service';
 //Reactive forms para criar formilarios no angular
 export class NewsletterFormComponent {
   newsletterForm!: FormGroup;
+  loading = signal(false);
+
   constructor(private service: NewsletterService) {
     this.newsletterForm = new FormGroup({
       name: new FormControl('', [Validators.required]),
@@ -27,6 +31,7 @@ export class NewsletterFormComponent {
     });
   }
   onSubmit() {
+    this.loading.set(true);
     if (this.newsletterForm.valid) {
       this.service
         .sendData(
@@ -34,7 +39,11 @@ export class NewsletterFormComponent {
           this.newsletterForm.value.email
         )
         .subscribe({
-          complete: () => {},
+          next: () => {
+            this.newsletterForm.reset();
+            this.loading.set(false);
+          },
+          error: () => this.loading.set(false),
         });
     }
   }
